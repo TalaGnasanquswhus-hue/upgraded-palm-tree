@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الهروب من قلعة المصفوفات</title>
+<style>
+:root{--bg:#f5f2ff;--card:#fff;--ink:#25203b;--muted:#6c6680;--accent:#6547b8;--line:#e1dbee;--good:#e5f7e9;--bad:#fff0e9}
+*{box-sizing:border-box}body{margin:0;padding:20px;background:linear-gradient(135deg,#f5f2ff,#eef7ff);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}
+main{max-width:760px;margin:auto}.hero,.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 8px 24px #33205b0c}
+.kicker{color:var(--muted);font-size:14px}.title{font-size:clamp(24px,5vw,34px);margin:8px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px}.stat{text-align:center;background:var(--bg);border-radius:13px;padding:12px;font-size:14px}.stat b{display:block;font-size:20px;margin-top:5px}
+.track{height:9px;border-radius:10px;background:var(--line);overflow:hidden;margin-top:15px}.fill{height:100%;width:0;background:var(--accent);transition:width .2s}
+button{font:inherit;cursor:pointer}.primary{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:13px 18px;font-weight:bold;width:100%;margin-top:14px;min-height:48px}.choice{display:block;text-align:right;width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);padding:13px;margin-top:9px;min-height:48px}.choice:disabled{cursor:default;opacity:.9}.choice:focus-visible,button:focus-visible{outline:3px solid #9d86eb;outline-offset:2px}.question{font-size:20px;line-height:1.7;margin:12px 0}.matrix{direction:ltr;display:inline-grid;grid-template-columns:repeat(3,minmax(30px,auto));gap:8px 18px;border-left:3px solid var(--ink);border-right:3px solid var(--ink);padding:6px 14px;margin:10px;font-size:20px;font-weight:bold}.visual{text-align:center}.feedback{border-radius:12px;background:var(--bg);padding:13px;margin-top:14px;line-height:1.8}.muted{color:var(--muted);font-size:14px}.hidden{display:none}.footer{font-size:13px;color:var(--muted);text-align:center;margin:18px 0}
+@media(max-width:420px){body{padding:12px}.hero,.panel{padding:15px}.stats{gap:6px}.stat{padding:9px 4px}}
+</style>
+</head>
+<body><main>
+<section class="hero">
+<div class="kicker">رياضيات • الصف الثاني الثانوي</div>
+<h1 class="title">🏰 الهروب من قلعة المصفوفات</h1>
+<p>أمامك خمسة أبواب سحرية! حلّي تحديات المصفوفات لتجمعي المفاتيح وتفتحي بوابة الخروج.</p>
+<div class="stats">
+<div class="stat">🗝️ المفاتيح<b id="keys">0 / 5</b></div>
+<div class="stat">⭐ النقاط<b id="score">0</b></div>
+<div class="stat">🚪 الأبواب<b id="stage">1 / 5</b></div>
+</div><div class="track"><div class="fill" id="fill"></div></div>
+</section>
+<section class="panel" id="game">
+<div class="kicker" id="door">الباب الأول</div>
+<h2 id="title">رتبة المصفوفة</h2>
+<div class="question" id="question"></div><div class="visual" id="visual"></div>
+<div id="choices"></div><div class="feedback hidden" id="feedback" aria-live="polite"></div>
+<button class="primary hidden" id="next">الباب التالي ←</button>
+</section>
+<section class="panel hidden" id="finish" aria-live="polite"></section>
+<section class="panel"><b>🎯 الهدف التعليمي</b><p>التعرّف على رتبة المصفوفة وعناصرها، وإجراء جمع المصفوفات وطرحها والضرب في عدد حقيقي.</p><p class="muted">طريقة اللعب: اقرئي السؤال، اختاري الإجابة، ثم اقرئي التفسير قبل الانتقال للباب التالي.</p></section>
+<div class="footer">لعبة تعليمية تفاعلية من إعداد الطالبة • المصفوفات</div>
+</main>
+<script>
+const data=[
+{door:"الباب الأول 🔐",title:"رتبة المصفوفة",q:"ما رتبة المصفوفة الآتية؟",matrix:[[1,2,3],[4,5,6]],opts:["٢ × ٣","٣ × ٢","٢ × ٢","٣ × ٣"],a:0,why:"فيها صفّان وثلاثة أعمدة. نكتب عدد الصفوف أولًا ثم الأعمدة؛ إذن الرتبة ٢ × ٣."},
+{door:"الباب الثاني 🧩",title:"عناصر المصفوفة",q:"إذا كانت أ = [[٣، ٧]، [٢، ٥]]، فما العنصر في الصف الثاني والعمود الأول؟",matrix:[[3,7],[2,5]],opts:["٣","٧","٢","٥"],a:2,why:"نحدد الصف الثاني ثم العمود الأول؛ العنصر هو ٢."},
+{door:"الباب الثالث ✨",title:"جمع المصفوفات",q:"أوجدي أ + ب إذا كانت أ = [[١، ٢]، [٣، ٤]] وب = [[٥، ٦]، [٧، ٨]].",opts:["[[٦، ٨]، [١٠، ١٢]]","[[٥، ١٢]، [١٠، ١٢]]","[[٤، ٤]، [٤، ٤]]","[[٦، ٧]، [٨، ٩]]"],a:0,why:"نجمع العناصر المتناظرة: ١+٥=٦، و٢+٦=٨، و٣+٧=١٠، و٤+٨=١٢."},
+{door:"الباب الرابع 🗝️",title:"طرح المصفوفات",q:"أوجدي أ − ب إذا كانت أ = [[٩، ٦]، [٥، ٨]] وب = [[٤، ٢]، [١، ٣]].",opts:["[[١٣، ٨]، [٦، ١١]]","[[٥، ٤]، [٤، ٥]]","[[٥، ٣]، [٤، ٥]]","[[٥، ٤]، [٦، ٥]]"],a:1,why:"نطرح العناصر المتناظرة: ٩−٤=٥، و٦−٢=٤، و٥−١=٤، و٨−٣=٥."},
+{door:"الباب الخامس 🚪",title:"الضرب في عدد حقيقي",q:"إذا كانت أ = [[٢، ٣]، [٤، ٥]]، فما ناتج ٣أ؟",opts:["[[٥، ٦]، [٧، ٨]]","[[٦، ٩]، [١٢، ١٥]]","[[٢، ٣]، [١٢، ١٥]]","[[٦، ٣]، [٤، ١٥]]"],a:1,why:"نضرب كل عنصر في ٣: ٢×٣=٦، و٣×٣=٩، و٤×٣=١٢، و٥×٣=١٥."}
+];
+let i=0,score=0,keys=0,answered=false;
+const el=id=>document.getElementById(id);
+function renderMatrix(m){return '<div class="matrix">'+m.flat().map(n=>'<span>'+n+'</span>').join('')+'</div>'}
+function render(){answered=false;let d=data[i];el('door').textContent=d.door;el('title').textContent=d.title;el('question').textContent=d.q;el('visual').innerHTML=d.matrix?renderMatrix(d.matrix):'';el('choices').innerHTML='';d.opts.forEach((o,j)=>{let b=document.createElement('button');b.className='choice';b.textContent=['أ','ب','ج','د'][j]+') '+o;b.onclick=()=>answer(j);el('choices').appendChild(b)});el('feedback').classList.add('hidden');el('next').classList.add('hidden');el('keys').textContent=keys+' / 5';el('score').textContent=score;el('stage').textContent=(i+1)+' / 5';el('fill').style.width=(i/5*100)+'%';el('game').classList.remove('hidden');el('finish').classList.add('hidden')}
+function answer(j){if(answered)return;answered=true;let d=data[i],ok=j===d.a;if(ok){keys++;score+=10}Array.from(el('choices').children).forEach((b,k)=>{b.disabled=true;if(k===d.a)b.style.borderColor='#32824c'});el('feedback').innerHTML='<b>'+(ok?'🔓 أحسنتِ! حصلتِ على مفتاح.':'🔒 ليست الإجابة الصحيحة، تعلّمي من الحل:')+'</b><br>'+d.why;el('feedback').classList.remove('hidden');el('next').textContent=i===4?'🏆 عرض النتيجة':'الباب التالي ←';el('next').classList.remove('hidden');el('keys').textContent=keys+' / 5';el('score').textContent=score;el('fill').style.width=((i+1)/5*100)+'%'}
+el('next').onclick=()=>{if(i<4){i++;render()}else finish()};
+function finish(){el('game').classList.add('hidden');el('finish').classList.remove('hidden');el('finish').innerHTML='<div style="font-size:36px">🏆</div><h2>انتهت المغامرة!</h2><p>جمعتِ '+keys+' من ٥ مفاتيح، وحصلتِ على '+score+' من ٥٠ نقطة.</p><p>'+(keys===5?'رائع! فتحتِ جميع أبواب القلعة.':'راجعي التفسيرات ثم أعيدي اللعب لتحسين نتيجتك.')+'</p><button class="primary" id="again">🔄 إعادة اللعب</button>';el('again').onclick=()=>{i=0;score=0;keys=0;render()}}
+render();
+</script></body></html>
